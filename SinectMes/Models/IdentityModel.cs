@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
 namespace SinectMes.Models
@@ -8,6 +9,7 @@ namespace SinectMes.Models
         public ApplicationUser()
         {
         }
+        public List<UserPermission> Permissions { get; set; }
     }
 
     public class ApplicationRole:IdentityRole<Guid>

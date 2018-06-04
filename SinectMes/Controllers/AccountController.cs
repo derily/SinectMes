@@ -16,15 +16,18 @@ namespace SinectMes.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+       // private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly ILogger _logger;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
+           // RoleManager<ApplicationRole> roleManager,
             ILoggerFactory loggerFactory)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            //_roleManager = roleManager;
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
@@ -40,6 +43,8 @@ namespace SinectMes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model,string returnUrl=null){
             ViewData["ReturnUrl"] = returnUrl;
+
+           // _roleManager.AddClaimAsync(new ApplicationRole(),new System.Security.Claims.Claim()
             if(ModelState.IsValid){
                 var result = await _signInManager.PasswordSignInAsync(model.UserName,
                                                                     model.Password, model.RememberMe, lockoutOnFailure: false);

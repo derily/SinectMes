@@ -9,6 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using SinectMes.Models;
 using Microsoft.EntityFrameworkCore;
+using SinectMes.Security;
+using Microsoft.AspNetCore.Authorization;
+using SinectMes.Identity;
 
 namespace SinectMes
 {
@@ -37,7 +40,7 @@ namespace SinectMes
                 options.SignIn.RequireConfirmedEmail = false;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
 
-            }).AddEntityFrameworkStores<ApplicationDbContext>()
+            }).AddEntityFrameworkStores<ApplicationDbContext>().AddUserManager<DemoUserManager<ApplicationUser>>()
             .AddDefaultTokenProviders();
 
             services.ConfigureApplicationCookie(options =>
@@ -55,9 +58,15 @@ namespace SinectMes
                 options.SlidingExpiration = true;
             });
 
-
+            //services.AddAuthorization(options => {
+            //    foreach (var item in collection)
+            //    {
+            //        options.AddPolicy(item,policy=>policy.Requirements.Add(new PermissionRequirement()))
+            //    }
+            //})
 
             services.AddMvc();
+            services.AddScoped<IAuthorizationHandler, PermissionHandler>();
 
         }
 
