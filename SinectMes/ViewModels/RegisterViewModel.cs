@@ -5,7 +5,7 @@ namespace SinectMes.ViewModels
 {
     public class RegisterViewModel
     {
-
+        [Required]
         public string UserName
         {
             get;
