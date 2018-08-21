@@ -29,24 +29,29 @@ namespace SinectMes
         {
             
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Default")));
-            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
                 options.Lockout.AllowedForNewUsers = true;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 5;
 
                 options.Password.RequireDigit = true;
-
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
                 options.SignIn.RequireConfirmedEmail = false;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
 
-            }).AddEntityFrameworkStores<ApplicationDbContext>().AddUserManager<DemoUserManager<ApplicationUser>>()
+            }).AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddUserManager<DemoUserManager<ApplicationUser>>()
+            .AddRoleManager<RoleManager<ApplicationRole>>()
             .AddDefaultTokenProviders();
 
             services.ConfigureApplicationCookie(options =>
             {
                 // Cookie settings
                 options.Cookie.HttpOnly = true;
+                options.Cookie.Expiration = new TimeSpan(0, 5, 0);
                 options.Cookie.Name = ".Application.Cookie.Cto";
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
                 // If the LoginPath isn't set, ASP.NET Core defaults 

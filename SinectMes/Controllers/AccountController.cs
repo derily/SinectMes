@@ -16,18 +16,18 @@ namespace SinectMes.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-       // private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly ILogger _logger;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-           // RoleManager<ApplicationRole> roleManager,
+            RoleManager<ApplicationRole> roleManager,
             ILoggerFactory loggerFactory)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            //_roleManager = roleManager;
+            _roleManager = roleManager;
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
@@ -36,6 +36,15 @@ namespace SinectMes.Controllers
         public IActionResult Login(string returnUrl=null){
             ViewData["ReturnUrl"] = returnUrl;
             return View();
+        }
+
+        public async Task<IActionResult> LogOut()
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+               await _signInManager.SignOutAsync();
+            }
+            return RedirectToAction("Login");
         }
 
         [HttpPost]
@@ -63,7 +72,7 @@ namespace SinectMes.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "用户名或密码不正确！");
                     return View(model);
                 }
             }
@@ -106,6 +115,40 @@ namespace SinectMes.Controllers
             return View(model);
         }
 
+        public IActionResult Roles()
+        {
+            return View(_roleManager.Roles.ToList());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddRole()
+        {
+            var role = new ApplicationRole() { Name = "Guest",ChineseName="来宾" };
+
+            var result=await _roleManager.CreateAsync(role);
+            await _roleManager.AddClaimAsync(role, new System.Security.Claims.Claim("permission", "page.create"));
+            if(result.Succeeded)
+            {
+                return Content("创建角色成功");
+            }
+            else
+            {
+                return Content(string.Join('\n', result.Errors));
+            }
+          
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditRole(string roleId)
+        {
+            var role = _roleManager.FindByIdAsync(roleId);
+            if (role != null)
+            {
+                
+            }
+            return Content("alert('ab');");
+            
+        }
 
         private void AddErrors(IdentityResult result)
         {
@@ -126,6 +169,8 @@ namespace SinectMes.Controllers
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
         }
+
+        
 
        
     }
