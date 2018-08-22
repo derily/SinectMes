@@ -114,7 +114,7 @@ namespace SinectMes.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
+        [Authorize]
         public IActionResult Roles()
         {
             return View(_roleManager.Roles.ToList());
@@ -141,12 +141,14 @@ namespace SinectMes.Controllers
         [HttpGet]
         public async Task<IActionResult> EditRole(string roleId)
         {
-            var role = _roleManager.FindByIdAsync(roleId);
-            if (role != null)
-            {
-                
-            }
-            return Content("alert('ab');");
+            var role = await _roleManager.FindByIdAsync(roleId);
+            //if (role != null)
+            //{
+
+            //}
+            //return Content("alert('ab');");
+            ViewBag.Id = roleId;
+            return PartialView("_Modal",role);
             
         }
 

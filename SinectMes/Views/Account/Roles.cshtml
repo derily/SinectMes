@@ -31,20 +31,29 @@
                         <th style="width: 140px">是否有效</th>
                         <th>操作</th>
                     </tr>
-                    @for (int i=0;i<Model.Count;i++)
+                    @for (int i = 0; i < Model.Count; i++)
                     {
                         <tr>
                             <td>@(i + 1).</td>
                             <td>@Model[i].ChineseName</td>
                             <td>@Model[i].CreateTime.ToShortDateString()</td>
                             <td></td>
-                            <td><a asp-controller="Account" asp-action="EditRole" asp-route-roleId="@Model[i].Id" class="btn btn-primary btn-sm">编辑</a></td>
+                            @*<td><a asp-controller="Account" asp-action="EditRole" asp-route-roleId="@Model[i].Id" class="btn btn-primary btn-sm">编辑</a></td>*@
+                            <td><a asp-action="EditRole" asp-controller="Account" asp-route-roleId="@Model[i].Id" data-target="#modal-container" data-toggle="modal">编辑</a></td>
                         </tr>
                     }
                 </table>
             </div>
+        </div>
+    </section>
+
+    <div id="modal-container" class="modal fade hidden-print" tabindex="-1" role="dialog" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
             </div>
-</section>
-   
+        </div>
+    </div>
+
 </div>
 
