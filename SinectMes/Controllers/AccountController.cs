@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using SinectMes.Models;
 using Microsoft.Extensions.Logging;
 using SinectMes.ViewModels;
+using System.Security.Claims;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SinectMes.Controllers
@@ -120,16 +121,35 @@ namespace SinectMes.Controllers
             return View(_roleManager.Roles.ToList());
         }
 
-        [HttpPost]
+        [Authorize]
+        [HttpGet]
         public async Task<IActionResult> AddRole()
         {
-            var role = new ApplicationRole() { Name = "Guest",ChineseName="来宾" };
+            return PartialView("_Modal");
+        }
 
-            var result=await _roleManager.CreateAsync(role);
-            await _roleManager.AddClaimAsync(role, new System.Security.Claims.Claim("permission", "page.create"));
+        [HttpPost]
+        public async Task<IActionResult> AddRole(AddRoleView role)
+        {
+            // var role = new ApplicationRole() { Name = "Guest",ChineseName="来宾" };
+            IdentityResult result;
+         
+            if (role.Id != 0)
+            {
+                var existedRole = await _roleManager.FindByIdAsync(role.Id.ToString());
+                existedRole.Name = role.Name;
+                existedRole.ChineseName = role.ChineseName;
+               result= await _roleManager.UpdateAsync(existedRole);
+            }
+            else
+            {
+                result = await _roleManager.CreateAsync(new ApplicationRole { Name = role.Name, ChineseName = role.ChineseName });
+            }
+            
+           // await _roleManager.AddClaimAsync(role, new System.Security.Claims.Claim("permission", "page.create"));
             if(result.Succeeded)
             {
-                return Content("创建角色成功");
+                return RedirectToAction("Roles");
             }
             else
             {

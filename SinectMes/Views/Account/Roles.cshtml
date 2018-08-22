@@ -21,6 +21,7 @@
         <div class="box">
             <div class="box-header with-border">
                 <h3 class="box-title">Roles</h3>
+                <a class="btn btn-primary" asp-action="EditRole" asp-controller="Account" asp-route-roldId="0" data-target="#modal-container-create" data-toggle="modal">新增</a>
             </div>
             <div class="box-body">
                 <table class="table table-bordered">
@@ -46,6 +47,36 @@
             </div>
         </div>
     </section>
+    <div id="modal-container-create" class="modal fade hidden-print" tabindex="-1" role="dialog" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id="target">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title">新增角色</h4>
+                    </div>
+                    <form asp-action="AddRole" asp-controller="Account" data-ajax="true" data-ajax-method="POST" data-ajax-mode="REPLACE-WITH" data-ajax-update="#target" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="Name" class="col-sm-2 control-label">角色名称</label>
+                                <div class="col-sm-10"><input class="form-control" id="Name" name="Name" /></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ChineseName" class="col-sm-2 control-label">中文名称</label>
+                                <div class="col-sm-10"><input class="form-control" id="ChineseName" name="ChineseName"/></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">OK</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">NO</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="modal-container" class="modal fade hidden-print" tabindex="-1" role="dialog" data-backdrop="static">
         <div class="modal-dialog">
